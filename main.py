@@ -11,15 +11,15 @@ __value__ = {
     "vaccineCode": "8803",  # 0208
     "vaccineIndex": "1",  # 接种第几针
     "linkmanId": "27009984",  # 26605318
-    "subscribeDate": "2022-03-12",
-    "subscirbeTime": "2004  ",  # GET 选择时间段时 响应body的Data ID
-    "departmentVaccineId": "21249",  # 9904 10339
+    "subscribeDate": "2022-03-16",
+    "subscirbeTime": "191468  ",  # GET 选择时间段时 响应body的Data ID
+    "departmentVaccineId": "10339",  # 9904 10339
     "depaCode": "4201050012",  # 4202040003_b3f3799d4320171be60039325023fa67
     # 时间+subscirbeTime+abcd md5 2022030500482004fuckhacker10000
     "serviceFee": "0",
     "ticket": "28331688:26605318:4202040003:9904___1646412476944",
     "channelCode": "yyymsg",
-    "idCardNo": "42100000000000045",
+    "idCardNo": "421381199704126045",
     "captchaVerification": "mLgqQeaWJEvA87kUTlgzQorjvrDQk4Q3XijOheMQmNpRe5ud/8W3PqiLXv2AN++cstPaDeR+5EFh4sx5vdhHmZhMmA+bHE32LXbYxv1Cra4=",
     # 待加密文本：token+验证码坐标   9beeae52e806454c8afcc44d93abd762---{"x":164.96428571428572,"y":5}   密钥：5GDh59HsZQ8CaJtD
     "token": "9beeae52e806454c8afcc44d93abd762",
@@ -36,7 +36,8 @@ def getConfig():
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/wxpic,image/tpg,image/webp,"
                   "image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9 ",
         "x-requested-with": "com.tencent.mm",
-        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_62ab0f98b60633782d86e7e5734ea8a3",
+        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_df60111736e42078e430958157aa1071",
+        "st":md5(time.strftime("%Y-%m-%d %H:%M:%S").encode("utf8")).hexdigest(),
         "cookie": "_xzkj_=wxtoken:3117786a5086286af91ee9fe547793c8_a8d19eae5badf2e1d8af10bda970967e",
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
     }
@@ -201,8 +202,8 @@ def getCaptcha():
     timestamp = int(timestamp * 1000)
     data = {
         "captchaType": "blockPuzzle",
-        "clientUid": createUUID(),  # "slider-f893f399-33d9-485f-8b27-7327e8cb82c0"
-        "ts": str(timestamp)
+        "clientUid": "slider-f893f399-33d9-485f-8b27-7327e8cb82c0",  # "slider-f893f399-33d9-485f-8b27-7327e8cb82c0"
+        "ts": int(timestamp)
     }
     r = requests.post(url, headers=head, json=data)
     a = json.loads(r.text)
@@ -237,7 +238,7 @@ def orderCheck():
     key = i.get("secretKey")
     # print("key ", key, "token ", token)
     x = image.readImage()
-    num = random.uniform(0.1111111111111, 0.1115111111111)
+    num = random.uniform(0.5111111111111, 0.9115111111111)
     point_x = ("%.13f") % (float(x) + num)
     point_dict = {"x": float(point_x), "y": 5}
     raw_text = json.dumps(point_dict, separators=(',', ':'))  # python会加入空格，影响结果
@@ -265,7 +266,7 @@ def subscribeAdd():
     url = "https://wx.scmttec.com/subscribe/subscribe/add.do"
     end = 'fuckhacker10000'
     head = getConfig()
-    data = __value__.copy()
+    data = __value__
     # times = nowTime()
     # times = times.replace('-', '').replace(' ', '').replace(':', '')[0:12]
     times = time.strftime("%Y%m%d%H%M")
@@ -273,7 +274,7 @@ def subscribeAdd():
     times = md5(times.encode("utf8")).hexdigest()
     data["depaCode"] = data["depaCode"] + "_" + times
     while True:
-        if int(time.strftime("%H%M%S")) > int("162959"):
+        if int(time.strftime("%H%M%S")) > int("163000"):
             r = requests.get(url, headers=head, params=data)
             break
         else:
@@ -285,19 +286,22 @@ def subscribeAdd():
 def startSubscribe():
     getBaseInfo()
     isCanSubscribe()
-    getWorkDay()
-    getWorkTime()
-    orderCheck()
-    res = subscribeAdd()
-    return res
+    if int(time.strftime("%H%M%S")) > int("163000"):
+        getWorkDay()
+        getWorkTime()
+        # orderCheck()
+        res = subscribeAdd()
+        return res
 
 
 if __name__ == '__main__':
+    orderCheck()
     i = 0
     while True:
         i = i + 1
-        if int(time.strftime("%H%M%S")) > int("162958"):
+        if int(time.strftime("%H%M%S")) >= int("162958"):
             try:
+                time.sleep(0.2)
                 print("[Info]:尝试运行")
                 res = startSubscribe()
                 res = json.loads(res)
@@ -307,11 +311,11 @@ if __name__ == '__main__':
                     print("[Error]：跳过循环", sys.exc_info(), file=f)
                     time.sleep(5)
                 continue
-            if res["code"] == "0000":
+            if res["code"] == "0000" or res["code"] == "9999":
                 print("[Success]：退出循环")
                 break
             else:
                 print(res["msg"])
         else:
             print("<", i)
-        time.sleep(5)
+    print(__value__)
