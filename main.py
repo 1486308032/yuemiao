@@ -36,6 +36,7 @@ def getConfig():
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/wxpic,image/tpg,image/webp,"
                   "image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9 ",
         "x-requested-with": "com.tencent.mm",
+        "referer": "https://wx.scmttec.com/index.html",
         "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_df60111736e42078e430958157aa1071",
         "st":md5(time.strftime("%Y-%m-%d %H:%M:%S").encode("utf8")).hexdigest(),
         "cookie": "_xzkj_=wxtoken:3117786a5086286af91ee9fe547793c8_a8d19eae5badf2e1d8af10bda970967e",
