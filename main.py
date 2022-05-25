@@ -8,12 +8,12 @@ import captcha
 import image
 
 __value__ = {
-    "vaccineCode": "8803",  # 0208
+    "vaccineCode": "0208",  # 0208
     "vaccineIndex": "1",  # 接种第几针
-    "linkmanId": "27009984",  # 26605318
-    "subscribeDate": "2022-03-16",
+    "linkmanId": "26605318",  # 26605318
+    "subscribeDate": "2022-05-26",
     "subscirbeTime": "191468  ",  # GET 选择时间段时 响应body的Data ID
-    "departmentVaccineId": "10339",  # 9904 10339
+    "departmentVaccineId": "9904",  # 9904 10339
     "depaCode": "4201050012",  # 4202040003_b3f3799d4320171be60039325023fa67
     # 时间+subscirbeTime+abcd md5 2022030500482004fuckhacker10000
     "serviceFee": "0",
@@ -29,16 +29,16 @@ __value__ = {
 def getConfig():
     head = {
         "Host": "wx.scmttec.com",
-        "user-agent": "Mozilla/5.0 (Linux; Android 11; Redmi K30 Pro Build/RKQ1.200826.002; wv) AppleWebKit/537.36 ("
-                      "KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/3185 MMWEBSDK/20220105 Mobile "
-                      "Safari/537.36 MMWEBID/9813 MicroMessenger/8.0.19.2080(0x280013DC) Process/toolsmp WeChat/arm64 "
-                      "Weixin NetType/WIFI Language/zh_CN ABI/arm64 ",
+        "user-agent": "Mozilla/5.0 (Linux; Android 12; Redmi K30 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 ("
+                      "KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/3225 MMWEBSDK/20220402 Mobile "
+                      "Safari/537.36 MMWEBID/9813 MicroMessenger/8.0.22.2140(0x280016E6) WeChat/arm64 Weixin "
+                      "NetType/4G Language/zh_CN ABI/arm64",
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/wxpic,image/tpg,image/webp,"
                   "image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9 ",
         "x-requested-with": "com.tencent.mm",
         "referer": "https://wx.scmttec.com/index.html",
-        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_df60111736e42078e430958157aa1071",
-        "st":md5(time.strftime("%Y-%m-%d %H:%M:%S").encode("utf8")).hexdigest(),
+        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_642fb85004ce0c28084be4708ea89279",
+        "st": md5(time.strftime("%Y-%m-%d %H:%M:%S").encode("utf8")).hexdigest(),
         "cookie": "_xzkj_=wxtoken:3117786a5086286af91ee9fe547793c8_a8d19eae5badf2e1d8af10bda970967e",
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
     }
@@ -70,9 +70,10 @@ def getDepartments():
         "latitude": "30.210896",
         "sortType": "1",
         "vaccineCode": "",
-        "customId": "3 ",
+        "customId": "30",
     }
     r = requests.post(url=url, headers=head, data=data)
+    r.encoding = "utf8"
     print(r.text)
     a = json.loads(r.text)
     for i in a.get("data").get("rows"):
@@ -94,6 +95,9 @@ def getBaseInfo():
     }
     head = getConfig()
     r = requests.get(url, headers=head, params=data)
+    r.encoding = "utf8"
+    print(r.text)
+    print(r.url)
     res = json.loads(r.text)
     __value__["vaccineCode"] = res["data"]["vaccineCode"]
     __value__["depaCode"] = res["data"]["departmentCode"]  # 待补充，提交订单需加时间戳md5
@@ -142,7 +146,7 @@ def getWorkDay():
         "vaccCode": __value__["vaccineCode"],
         "vaccIndex": __value__["vaccineIndex"],
         "departmentVaccineId": __value__["departmentVaccineId"],
-        "month": "2022-03-01",
+        "month": "2022-05-26",
 
     }
     r = requests.get(url, headers=head, params=data)
@@ -275,7 +279,7 @@ def subscribeAdd():
     times = md5(times.encode("utf8")).hexdigest()
     data["depaCode"] = data["depaCode"] + "_" + times
     while True:
-        if int(time.strftime("%H%M%S")) > int("163000"):
+        if int(time.strftime("%H%M%S")) > int("163000") or 1:
             r = requests.get(url, headers=head, params=data)
             break
         else:
@@ -287,7 +291,7 @@ def subscribeAdd():
 def startSubscribe():
     getBaseInfo()
     isCanSubscribe()
-    if int(time.strftime("%H%M%S")) > int("163000"):
+    if int(time.strftime("%H%M%S")) > int("163000") or 1: #简单的时间控制，16点30分00秒之后开始运行，or 1 则忽略时间直接运行
         getWorkDay()
         getWorkTime()
         # orderCheck()
@@ -296,11 +300,12 @@ def startSubscribe():
 
 
 if __name__ == '__main__':
+
     orderCheck()
     i = 0
     while True:
         i = i + 1
-        if int(time.strftime("%H%M%S")) >= int("162958"):
+        if int(time.strftime("%H%M%S")) >= int("162958") or 1:#简单的时间控制，16点29分58秒之后开始运行，or 1 则忽略时间直接运行
             try:
                 time.sleep(0.2)
                 print("[Info]:尝试运行")
