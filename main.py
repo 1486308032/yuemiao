@@ -205,10 +205,9 @@ def getCaptcha():
     head = getConfig()
     timestamp = time.time()
     timestamp = int(timestamp * 1000)
-    print(timestamp)
     data = {
         "captchaType": "blockPuzzle",
-        "clientUid": "slider-f893f399-33d9-485f-8b27-7327e8cb82c0",  # "slider-f893f399-33d9-485f-8b27-7327e8cb82c0"
+        "clientUid": "slider-f893f399-33d9-485f-8b27-7327e8cb82c0",  # "slider-f893f399-33d9-485f-8b27-7327e8cb82c0"，此处可替换为createUUID()，随机一个UUID()
         "ts": int(timestamp)
     }
     r = requests.post(url, headers=head, json=data)
