@@ -19,7 +19,7 @@ __value__ = {
     "serviceFee": "0",
     "ticket": "28331688:26605318:4202040003:9904___1646412476944",
     "channelCode": "yyymsg",
-    "idCardNo": "421381199704126045",
+    "idCardNo": "4211234612321313", # 身份证号码
     "captchaVerification": "mLgqQeaWJEvA87kUTlgzQorjvrDQk4Q3XijOheMQmNpRe5ud/8W3PqiLXv2AN++cstPaDeR+5EFh4sx5vdhHmZhMmA+bHE32LXbYxv1Cra4=",
     # 待加密文本：token+验证码坐标   9beeae52e806454c8afcc44d93abd762---{"x":164.96428571428572,"y":5}   密钥：5GDh59HsZQ8CaJtD
     "token": "9beeae52e806454c8afcc44d93abd762",
