@@ -11,8 +11,8 @@ __value__ = {
     "vaccineCode": "0208",  # 0208
     "vaccineIndex": "1",  # 接种第几针
     "linkmanId": "26605318",  # 26605318
-    "subscribeDate": "2022-05-26",
-    "subscirbeTime": "191468  ",  # GET 选择时间段时 响应body的Data ID
+    "subscribeDate": "2022-05-27",
+    "subscirbeTime": "2004  ",  # GET 选择时间段时 响应body的Data ID
     "departmentVaccineId": "9904",  # 9904 10339
     "depaCode": "4201050012",  # 4202040003_b3f3799d4320171be60039325023fa67
     # 时间+subscirbeTime+abcd md5 2022030500482004fuckhacker10000
@@ -29,15 +29,15 @@ __value__ = {
 def getConfig():
     head = {
         "Host": "wx.scmttec.com",
-        "user-agent": "Mozilla/5.0 (Linux; Android 12; Redmi K30 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 ("
-                      "KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/3225 MMWEBSDK/20220402 Mobile "
-                      "Safari/537.36 MMWEBID/9813 MicroMessenger/8.0.22.2140(0x280016E6) WeChat/arm64 Weixin "
+        "user-agent": "Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 ("
+                      "KHTML, like Gecko) Version/4.0 Chrome/87.0.4240.99 XWEB/3225 MMWEBSDK/20220402 Mobile "
+                      "Safari/537.36 MMWEBID/9813 MicroMessenger/8.1.22.2140(0x280016E6) WeChat/arm64 Weixin "
                       "NetType/4G Language/zh_CN ABI/arm64",
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/wxpic,image/tpg,image/webp,"
                   "image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9 ",
         "x-requested-with": "com.tencent.mm",
         "referer": "https://wx.scmttec.com/index.html",
-        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_642fb85004ce0c28084be4708ea89279",
+        "tk": "wxtoken:3117786a5086286af91ee9fe547793c8_e072d4f9ae73476bc59a8b86c8600d6d",
         "st": md5(time.strftime("%Y-%m-%d %H:%M:%S").encode("utf8")).hexdigest(),
         "cookie": "_xzkj_=wxtoken:3117786a5086286af91ee9fe547793c8_a8d19eae5badf2e1d8af10bda970967e",
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
@@ -146,14 +146,14 @@ def getWorkDay():
         "vaccCode": __value__["vaccineCode"],
         "vaccIndex": __value__["vaccineIndex"],
         "departmentVaccineId": __value__["departmentVaccineId"],
-        "month": "2022-05-26",
+        "month": "2022-05-1",
 
     }
     r = requests.get(url, headers=head, params=data)
     print("订单页面 可选日期", r.text)
     a = json.loads(r.text)
     i = a.get("data").get("dateList")
-    __value__["subscribeDate"] = i[0]
+    __value__["subscribeDate"] = i[1]
 
 
 # 订单页面 可选日期的具体时间
@@ -205,6 +205,7 @@ def getCaptcha():
     head = getConfig()
     timestamp = time.time()
     timestamp = int(timestamp * 1000)
+    print(timestamp)
     data = {
         "captchaType": "blockPuzzle",
         "clientUid": "slider-f893f399-33d9-485f-8b27-7327e8cb82c0",  # "slider-f893f399-33d9-485f-8b27-7327e8cb82c0"
@@ -248,7 +249,7 @@ def orderCheck():
     point_dict = {"x": float(point_x), "y": 5}
     raw_text = json.dumps(point_dict, separators=(',', ':'))  # python会加入空格，影响结果
     en_point_text = captcha.enPoint(raw_text, key)
-    res = checkCaptcha(token, en_point_text)
+    res = checkCaptcha(point_text= en_point_text,token=token)
     # en_point_text = captcha.enPoint(x, key)
     # checkCaptcha(token, en_point_text)
 
